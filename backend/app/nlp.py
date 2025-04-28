@@ -1,11 +1,16 @@
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+import os
 
  
-nltk.data.path.append('./backend/nltk_data') 
+nltk.data.path.append(os.path.join(os.path.dirname(__file__), '..', 'nltk_data'))
+
+nltk.download('punkt')
+nltk.download('wordnet')
 
 lemmatizer = WordNetLemmatizer()
+
 
 def preprocess_input(user_input):
     tokens = word_tokenize(user_input.lower())

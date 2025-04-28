@@ -27,7 +27,7 @@ def query():
         if intent == 'greeting':
             return jsonify({'response': "Hello! How can I assist you with your building model?"})
 
-        model = load_ifc('static/assignment.ifc')
+        model = load_ifc('backend/assignment.ifc')
         if not model:
             return jsonify({'response': 'Failed to load IFC file.'})
 
