@@ -17,7 +17,7 @@ def get_wall_count(model):
         walls = model.by_type("IfcWall")
         return len(walls)
     except AttributeError:
-        return 0  # Default to 0 if walls attribute is missing
+        return 0   
 
 def get_plastering_area(model):
     walls = model.by_type("IfcWall")
@@ -38,7 +38,7 @@ def extract_wall_area(wall):
         faces = np.array(shape.geometry.faces).reshape(-1, 3)
         return calculate_surface_area(verts, faces)
     except Exception:
-        return 0  # Gracefully handle geometry errors
+        return 0  
 
 def calculate_surface_area(verts, faces):
     
@@ -69,7 +69,7 @@ def extract_element_volume(element):
             if rel.is_a("IfcRelDefinesByProperties"):
                 props = rel.RelatingPropertyDefinition
 
-                # Handle property sets
+               
                 if hasattr(props, "HasProperties"):
                     for prop in props.HasProperties:
                         if hasattr(prop, "Name") and prop.Name in [
@@ -80,3 +80,16 @@ def extract_element_volume(element):
                             except Exception:
                                 continue
     return 0.0
+
+
+def get_door_count(model):
+    try:
+        doors = model.by_type('IfcDoor')
+        return len(doors)
+    except Exception as e:
+        print(f"Error in get_door_count: {e}")
+        return None
+
+def get_material_names(model):
+    materials = model.by_type("IfcMaterial")
+    return [mat.Name for mat in materials if hasattr(mat, "Name")]

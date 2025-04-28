@@ -2,7 +2,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
-# Ensure necessary NLTK data packages are downloaded
+ 
 nltk.download('punkt')
 nltk.download('wordnet')
 
@@ -14,28 +14,27 @@ def preprocess_input(user_input):
     return lemmatized
 
 def identify_intent(tokens):
-     
-    intents = {
-        'plastering_area': ['plaster', 'plastering'],
-        'wall_volume': ['wall', 'volume'],
-        'slab_volume': ['slab', 'volume'],
-        'wall_area': ['wall', 'surface', 'area'],
-        'wall_count': ['wall', 'count', 'how', 'many', 'number'],
-    }
+    tokens_set = set(tokens)
 
-  
-    for intent, keywords in intents.items():
-        if all(keyword in tokens for keyword in keywords):
-            return intent
+    
+    casual_keywords = ['hello', 'hi', 'hey', 'thanks', 'please', 'good', 'morning', 'evening']
+    if any(word in tokens_set for word in casual_keywords) and not {'wall', 'door', 'slab', 'plaster', 'volume', 'material', 'count','cost'}.intersection(tokens_set):
+        return 'greeting'
 
-   
-    max_overlap = 0
-    selected_intent = 'unknown'
+    
+    if 'slab' in tokens_set and 'volume' in tokens_set:
+        return 'slab_volume'
+    if 'wall' in tokens_set and 'volume' in tokens_set:
+        return 'wall_volume'
+    if 'wall' in tokens_set and ('area' in tokens_set or 'surface' in tokens_set):
+        return 'wall_area'
+    if 'wall' in tokens_set and any(w in tokens_set for w in ['count', 'how', 'many', 'number']):
+        return 'wall_count'
+    if 'door' in tokens_set and any(w in tokens_set for w in ['count', 'how', 'many', 'number']):
+        return 'door_count'
+    if 'plaster' in tokens_set or 'plastering' in tokens_set or 'plastered' in tokens_set:
+        return 'plastering_area'
+    if 'material' in tokens_set and any(w in tokens_set for w in ['names', 'used', 'materials','list']):
+        return 'material_names'
 
-    for intent, keywords in intents.items():
-        overlap = len(set(tokens).intersection(set(keywords)))
-        if overlap > max_overlap:
-            max_overlap = overlap
-            selected_intent = intent
-
-    return selected_intent if max_overlap > 0 else 'unknown'
+    return 'unknown'

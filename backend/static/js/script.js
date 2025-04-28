@@ -23,7 +23,7 @@ function sendQuery() {
     spinner.style.display = "inline-block"; // Show spinner
 
     // Send to backend
-    fetch("http://127.0.0.1:5000/query", {   // 👈 USE FULL URL LOCALLY
+    fetch("/query", {   // 👈 USE FULL URL LOCALLY
         method: "POST",
         headers: {
             "Content-Type": "application/json"
